@@ -6,6 +6,8 @@ package main
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+import main.typehandler.*
+
 class AppTest {
     @Test
     fun correctHexStringRepresentation() {
@@ -31,5 +33,12 @@ class AppTest {
         val bitStringNegative = "10111110100000000000000000000000"
         assertEquals(127.864F, bitStringToFloat(bitStringPositive))
         assertEquals(-0.25F, bitStringToFloat(bitStringNegative))
+    }
+    fun testShiftRegisters(){
+        val registers = arrayOf(127.864F, 332.584F, 72.33F)
+        val shiftNegative = -1
+        val shiftPositive = 1
+        assertEquals(6332744F, shiftRegisters(registers, shiftPositive))
+        assertEquals(-0.00084787083F, shiftRegisters(registers, shiftNegative))
     }
 }

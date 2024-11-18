@@ -5,83 +5,23 @@ package main
 
 import kotlin.math.absoluteValue
 import kotlin.math.pow
-
-fun generateBitFactors(): List<Int> {
-    var factors = mutableListOf<Int>()
-    for (i in 0 ..< 31) {
-        factors.add(0, 2.0.pow(i).toInt())
-    }
-    return factors.toList()
-}
-
-val BITS_FACTOR = generateBitFactors()
-
-fun floatToBitString(value: Float): String {
-    var bits = value.toBits()
-    return intToBitString(bits)
-}
-
-fun intToBitString(value: Int): String {
-    var bits = value
-    var bitString = StringBuilder("")
-    if (bits >= 0) {
-        bitString.append("0")
-    } else {
-        bitString.append("1")
-        bits = Int.MAX_VALUE - (bits.absoluteValue - 1)
-    }
-    for (factor in BITS_FACTOR) {
-        if ((bits / factor) > 0) {
-            bitString.append("1")
-            bits -= factor
-        } else {
-            bitString.append("0")
-        }
-    }
-    return bitString.toString()
-}
-
-fun sliceToHex(slice: String): Char {
-    var value = 0
-    for ((idx, char) in slice.reversed().withIndex()) {
-        if (char == '1') {
-            value += 2.0.pow(idx).toInt()
-        }
-    }
-    return value.digitToChar(radix = 16)
-}
-
-fun floatToHexString(value: Float): String {
-    var hexString = StringBuilder("")
-    var bitString = floatToBitString(value)
-    for (i in 0 ..< 32 / 4) {
-        var slice = bitString.slice(i * 4..i * 4 + 3)
-        hexString.append(sliceToHex(slice))
-    }
-    return hexString.toString()
-}
-
-fun bitStringToFloat(value: String): Float {
-    var number = 0.0
-    for ((idx, char) in value.slice(1..<32).reversed().withIndex()) {
-        if (char == '1') {
-            number += 2.0.pow(idx)
-        }
-    }
-    if (value[0] == '1'){
-        number = number -1 - Int.MAX_VALUE  
-    }
-    return Float.fromBits(number.toInt())
-}
+import main.typehandler.*
 
 fun flipWords(value: Float): Float {
     var bitString = floatToBitString(value)
     bitString = String.format("%s%s", bitString.slice(16..31), bitString.slice(0..15))
     return bitStringToFloat(bitString)
 }
+fun shiftRegisters(registers: Array<Float>, shift: Int): Float {
+    val bitStrings = registers.map({floatToBitString(it)})
+    val startIndexSlice = Float.SIZE_BITS + (shift * 2 * Byte.SIZE_BITS)
+    val endIndexSlice = startIndexSlice + Float.SIZE_BITS
+    val shiftedBitString = bitStrings.joinToString("").slice(startIndexSlice..endIndexSlice)  
+    return bitStringToFloat(shiftedBitString)
+}
 
 fun main() {
-    val number = 127.864F
+    val number = 1220.27F
     println(floatToHexString(number))
     println(floatToHexString(flipWords(number)))
 }
