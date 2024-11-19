@@ -17,4 +17,4 @@ gradlew.bat
 
 # other files
 .gitattributes
-kls_database
+kls_database.db
