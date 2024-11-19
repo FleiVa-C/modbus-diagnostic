@@ -13,6 +13,9 @@ fun flipWords(value: Float): Float {
     return bitStringToFloat(bitString)
 }
 fun shiftRegisters(registers: Array<Float>, shift: Int): Float {
+    if (shift !in -1..1){
+        throw IllegalArgumentException("Register shift must be within -1 to 1")
+    }
     val bitStrings = registers.map({floatToBitString(it)})
     val startIndexSlice = Float.SIZE_BITS + (shift * 2 * Byte.SIZE_BITS)
     val endIndexSlice = startIndexSlice + Float.SIZE_BITS
@@ -21,7 +24,5 @@ fun shiftRegisters(registers: Array<Float>, shift: Int): Float {
 }
 
 fun main() {
-    val number = 1220.27F
-    println(floatToHexString(number))
-    println(floatToHexString(flipWords(number)))
+    TODO()
 }

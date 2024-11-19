@@ -5,8 +5,10 @@ package main
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 import main.typehandler.*
+import main.shiftRegisters
 
 class AppTest {
     @Test
@@ -34,11 +36,17 @@ class AppTest {
         assertEquals(127.864F, bitStringToFloat(bitStringPositive))
         assertEquals(-0.25F, bitStringToFloat(bitStringNegative))
     }
-    fun testShiftRegisters(){
+    @Test fun testShiftRegisters(){
         val registers = arrayOf(127.864F, 332.584F, 72.33F)
-        val shiftNegative = -1
         val shiftPositive = 1
         assertEquals(6332744F, shiftRegisters(registers, shiftPositive))
+        val shiftNegative = -1
         assertEquals(-0.00084787083F, shiftRegisters(registers, shiftNegative))
+        val noShift = 0
+        assertEquals(332.584F, shiftRegisters(registers, noShift))
+        
+        val shiftTooMuch = -2
+        assertFailsWith<IllegalArgumentException>(message = "Register shift must be within -1 to 1" ,block = {shiftRegisters(registers, shiftTooMuch)})
+        
     }
 }
