@@ -22,12 +22,50 @@ fun shiftRegisters(registers: Array<Float>, shift: Int): Float {
     return bitStringToFloat(shiftedBitString)
 }
 
-fun parseArgs(args: Array<String>): Map<String, String>{
+fun parseArgs(args: Array<String>): Map<String, String> {
     return args.toList().chunked(2).associate { it[0].replace("--", "") to it[1] }
+}
 
+fun printResults(registers: Array<Float>, shift: Int?, flip: Boolean?, result: Float) {
+    println("Registers: ${registers.toList()}")
+    println("Shift: $shift")
+    println("flip: $flip")
+    println("Result: $result")
 }
 
 fun main(args: Array<String>) {
     val argsMap = parseArgs(args)
-    println(argsMap)
+    val shift = argsMap["shift"]?.toInt()
+    val flip = argsMap["flip"]?.toBoolean()
+    var registersArray: Array<Float> =
+            try {
+                argsMap["registers"]!!
+                        .replace("[", "")
+                        .replace("]", "")
+                        .split(",")
+                        .map(String::toFloat)
+                        .toTypedArray()
+            } catch (e: NullPointerException) {
+                error("Mendatory argument \"registers\" not given.")
+            }
+    when {
+        (shift != null && flip != null) -> {
+            val result = if (flip) flipWords(shiftRegisters(registersArray, shift)) else shiftRegisters(registersArray, shift)
+            printResults(registersArray, shift, flip, result)
+        }
+        (shift != null) -> {
+            val result = shiftRegisters(registersArray, shift)
+            printResults(registersArray, shift, flip, result)
+        }
+        (flip != null) -> {
+            val result = flipWords(registersArray[1])
+            printResults(registersArray, shift, flip, result)
+        }
+        else -> {
+            println("Registers: $registersArray")
+            println("Shift: $shift")
+            println("flip: $flip")
+            println("Result: ${registersArray[1]}")
+        }
+    }
 }
