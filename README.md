@@ -15,7 +15,7 @@ the HighWordAtLowerAddress setting or a combination of both has an effect on the
 - Kotlin 1.9.24
 - Gradle 8.10.2 
 ```
-git clone https://github.com/FleiVa-C/modbus-diagnostic
+git clone https://github.com/reberfla/modbus-diagnostic
 gradle build
 unzip cli/build/distribution/cli.zip
 cp cli/build/distribution/cli/bin/cli <destination_path>/modbus-diagnostic
